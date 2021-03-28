@@ -1,0 +1,54 @@
+#game {
+	margin-top: 15px;
+}
+
+.title {
+	margin-bottom: 10px;
+}
+
+.row {
+	width: 450px;
+	height: 150px;
+	margin: 0;
+	padding: 0;
+}
+
+.square {
+	font-size: 20pt;
+	background: unset;
+	border: 1px solid gray;
+}
+
+.square.top {
+	border-top: none;
+	margin-top: 0;
+}
+
+.square.right {
+	border-right: none;
+	margin-right: 0;
+}
+
+.square.bottom {
+	border-bottom: none;
+	margin-bottom: 0;
+}
+
+.square.left {
+	border-left: none;
+	margin-left: 0;
+}
+
+.win {
+  background-color: lightgreen;
+}
+
+
+#history-container {
+	width: 200px;
+	text-align: center;
+}
+
+#history button {
+	margin-bottom: 5px;
+}

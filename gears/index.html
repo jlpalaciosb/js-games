@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gears</title>
+	<style>
+		body {
+			margin: 0;
+			background-color: black;
+		}
+		#canvas {
+			margin-top: 50px;
+			margin-left: calc(50% - 400px);
+			border: 1px solid greenyellow;
+		}
+	</style>
+	<script type="text/javascript">
+		let ctx = null;
+
+		let d = 25, pi = Math.PI;
+		let n1 = 50, n2 = 30, n3 = 10;
+		let p1 = d * n1, p2 = d * n2, p3 = d * n3;
+		let v = 0.05, t0 = null;
+
+		let r1 = p1 / 2 / pi, r2 = p2 / 2 / pi, r3 = p3 / 2 / pi;
+		let v1 = v / r1, v2 = -v / r2, v3 = v / r3;
+
+		let ff = 400 - r1 - r2 - r3;
+		let x1 = ff + r1, y1 = 250;
+		let x2 = x1 + r1 + r2, y2 = 250;
+		let x3 = x2 + r2 + r3, y3 = 250;
+
+		let rx = ff - 1, ry = 250 - r1 - 1, rw = 2 * (r1 + r2 + r3) + 2, rh = 2 * r1 + 2;
+		function black() {
+			ctx.beginPath();
+			ctx.rect(rx, ry, rw, rh);
+			ctx.fill();
+		}
+
+		function init() {
+			ctx = document.getElementById("canvas").getContext("2d");
+			ctx.strokeStyle = "greenyellow";
+			ctx.fillStyle = "black";
+			t0 = new Date().getTime();
+			setInterval(() => {
+				black();
+				let t = new Date().getTime() - t0;
+				drawCircle(x1, y1, r1, n1, v1 * t);
+				drawCircle(x2, y2, r2, n2, v2 * t);
+				drawCircle(x3, y3, r3, n3, v3 * t);
+			}, 50);
+		}
+
+		function drawCircle(x, y, r, n, a) {
+			ctx.beginPath();
+			ctx.arc(x, y, r, 0, 2 * Math.PI);
+			ctx.stroke();
+
+			for (let i = 0; i < n; i++) {
+				let co = r * Math.sin(2 * pi / n * i + a);
+				let ca = r * Math.cos(2 * pi / n * i + a);
+				drawLine(x, y, x + ca, y - co);
+			}
+		}
+
+		function drawLine(x1, y1, x2, y2) {
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			ctx.stroke();
+		}
+	</script>
+</head>
+<body onload="init()">
+	<canvas id="canvas" width="800" height="500"></canvas>
+</body>
+</html>
