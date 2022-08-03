@@ -5,12 +5,12 @@
 	<style>
 		body {
 			margin: 0;
-			background-color: black;
+			background-color: #273746;
 		}
 		#canvas {
 			margin-top: 50px;
 			margin-left: calc(50% - 400px);
-			border: 1px solid greenyellow;
+			border: 1px solid lightgreen;
 		}
 	</style>
 	<script type="text/javascript">
@@ -38,8 +38,8 @@
 
 		function init() {
 			ctx = document.getElementById("canvas").getContext("2d");
-			ctx.strokeStyle = "greenyellow";
-			ctx.fillStyle = "black";
+			ctx.strokeStyle = "lightgreen";
+			ctx.fillStyle = "#273746";
 			t0 = new Date().getTime();
 			setInterval(() => {
 				black();
