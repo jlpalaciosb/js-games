@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Random</title>
+
+	<style>
+		body {
+			background-color: #273746;
+			font-family: sans-serif;
+		}
+
+		canvas {
+			border: 1px solid lightgreen;
+		}
+
+		.container {
+			margin-top: 8px;
+			margin-left: 8px;
+			display: inline-block;
+		}
+
+		span {
+			color: white;
+		}
+
+		.line {
+			margin-bottom: 8px;
+		}
+
+		button {
+			/* border-color: green;
+			background-color: black; */
+			width: 8rem;
+			margin-right: 1rem;
+		}
+
+		.label {
+			display: inline-block;
+			width: 180px;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<canvas id="myCanvas" width="800" height="600">
+		</canvas>
+	</div>
+	<div class="container">
+		<div class="line">
+			<span class="label">Area:</span>
+			<span>800 x 600</span>
+		</div>
+		<div class="line">
+			<span class="label">Minimum Distance:</span>
+			<span>100</span>
+		</div>
+		<div class="line">
+			<span class="label">Point Radius:</span>
+			<span>10</span>
+		</div>
+		<div class="line">
+			<span class="label">No. of Attempts:</span>
+			<span id="numIntentos"></span>
+		</div>
+		<div class="line">
+			<span class="label">No. of Hits:</span>
+			<span id="numExitos"></span>
+		</div>
+		<div class="line">
+			<span class="label">Theoretical Maximum:</span>
+			<span>(800/100) * (600/100) = 48?</span>
+		</div>
+		<div class="line">
+			<span class="label">Hit Ratio (line chart):</span>
+			<span id="hitRatio"></span>
+		</div>
+		<div class="line">
+			<canvas id="myCanvas2" width="300" height="100">
+			</canvas>
+		</div>
+		<div class="line">
+			<span class="label">Elapsed Time:</span>
+			<span id="elTime">0s</span>
+		</div>
+		<div class="line">
+			<button onclick="detener()">Stop</button>
+			<button onclick="window.location.reload()">Retry</button>
+		</div>
+		<br>
+	</div>
+
+	<script>
+		// OBJETIVO: UBICAR PUNTOS ALEATORIAMENTE EN EL AREA, TAL QUE NO ESTEN A MENOS DE UNA DISTANCIA DX
+
+		// variables globales
+		var CTX = document.getElementById('myCanvas').getContext('2d');
+		CTX.fillStyle = "lightgreen";
+		var CTX2 = document.getElementById('myCanvas2').getContext('2d');
+		CTX2.fillStyle = "#273746";
+		CTX2.strokeStyle = "lightgreen";
+		var MX = 800;
+		var MY = 600;
+		var PTS = [];
+		var DX = 100; // distancia minima
+		var N = 0;
+		var IDI = null;
+		var STOP = false; // stop flag
+		var RATIO = [];
+		var T = Date.now();
+
+		function drawPunto(x, y) {
+			CTX.beginPath();
+			CTX.arc(x, y, 10, 0, 2 * Math.PI);
+			CTX.fill();
+		}
+
+		function drawRatio() {
+			CTX2.beginPath();
+			CTX2.rect(0, 0, 300, 100);
+			CTX2.fill();
+			let x0 = 0
+			let y0 = 0
+			RATIO.forEach((r, i) => {
+				let x1 = i;
+				let y1 = (1 - r) * 100;
+				CTX2.beginPath();
+				CTX2.moveTo(x0, y0);
+				CTX2.lineTo(x1, y1);
+				CTX2.stroke();
+				[x0, y0] = [x1, y1]
+			})
+		}
+
+		function dist(p1, p2) {
+			return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+		}
+
+		// intenta ubicar un punto
+		function tryPunto() {
+			var ptNew = {
+				x: Math.random() * MX,
+				y: Math.random() * MY,
+			};
+			var ok = true;
+
+			PTS.forEach(pt => {
+				if (dist(pt, ptNew) < DX) {
+					ok = false;
+				}
+			});
+
+			if (ok) {
+				PTS.push(ptNew);
+				drawPunto(ptNew.x, ptNew.y);
+				console.log('new point OK!');
+			} else {
+				console.log('new point FAILED!');
+			}
+
+			N++;
+			document.getElementById('numIntentos').innerHTML = N;
+			document.getElementById('numExitos').innerHTML = PTS.length;
+			let hitRatio = PTS.length / N;
+			document.getElementById('hitRatio').innerHTML = hitRatio.toFixed(4);
+
+			RATIO.push(hitRatio);
+			if (RATIO.length > 300) {
+				RATIO.shift();
+			}
+			drawRatio()
+
+			if (!STOP) {
+				setTimeout(tryPunto, 50);
+			}
+		}
+
+		// IDI = setInterval(tryPunto, 20);
+		tryPunto();
+
+		function detener() {
+			// clearInterval(IDI);
+			STOP = true;
+		}
+
+		setInterval(() => {
+			document.getElementById('elTime').innerHTML = '' + ((Date.now() - T) / 1000).toFixed(0) + 's';
+		}, 1000)
+
+
+	</script>
+</body>
+
+</html>
