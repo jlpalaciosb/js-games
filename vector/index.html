@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body {
+			margin: 0;
+			background-color: #273746;
+		}
+
+		span {
+			color: white;
+		}
+
+		#canvas {
+			margin-top: 10px;
+			margin-left: 10px;
+			border: 1px solid lightgreen;
+		}
+
+		button {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<div style="display:inline-block">
+			<canvas id="canvas" width="800" height="600"></canvas>
+		</div>
+		<div style="display:inline-block">
+			<span>Param x: C1</span><br>
+			<input type="number" id="c1" step="10" value="120">
+			<br><br>
+			<span>Param x: V1</span><br>
+			<input type="number" id="v1" step="0.01" value="0.008725">
+			<br><br>
+			<span>Param x: C2</span><br>
+			<input type="number" id="c2" step="10" value="80">
+			<br><br>
+			<span>Param x: V2</span><br>
+			<input type="number" id="v2" step="0.05" value="0.10">
+			<br><br>
+			<button onclick="clickDraw()">Draw!</button>
+			<br><br>
+			<button onclick="clickReset()">Reset!</button>
+			<br><br>
+		</div>
+	</div>
+
+	<script>
+		// parametros del patron
+		var c1 = 120, v1 = 0.008725;
+		var c2 = 80, v2 = 0.10;
+
+		// set parametros from location search query params
+		var usp = new URLSearchParams(location.search);
+		if (Number.isFinite(parseFloat(usp.get('c1')))) {
+			c1 = parseFloat(usp.get('c1'));
+			document.getElementById('c1').value = c1;
+		}
+		if (Number.isFinite(parseFloat(usp.get('v1')))) {
+			v1 = parseFloat(usp.get('v1'));
+			document.getElementById('v1').value = v1;
+		}
+		if (Number.isFinite(parseFloat(usp.get('c2')))) {
+			c2 = parseFloat(usp.get('c2'));
+			document.getElementById('c2').value = c2;
+		}
+		if (Number.isFinite(parseFloat(usp.get('v2')))) {
+			v2 = parseFloat(usp.get('v2'));
+			document.getElementById('v2').value = v2;
+		}
+
+		// canvas boilerplate
+		var CTX = document.getElementById("canvas").getContext("2d");
+		CTX.strokeStyle = "greenyellow";
+		CTX.fillStyle = "#273746";
+		CTX.beginPath();
+		CTX.rect(0, 0, 800, 600);
+		CTX.fill();
+		function drawLine(x1, y1, x2, y2) {
+			CTX.beginPath();
+			CTX.moveTo(x1, y1);
+			CTX.lineTo(x2, y2);
+			CTX.stroke();
+		}
+
+		/**************/
+		/* ini engine */
+		/**************/
+
+		// generar patron
+		var pv = [], pi = 0;
+		for (let i = 0; i < c1 / 2; i++) pv.push(v1);
+		for (let i = 0; i < c2; i++) pv.push(v2);
+		for (let i = 0; i < c1; i++) pv.push(v1);
+		for (let i = 0; i < c2; i++) pv.push(-v2);
+		for (let i = 0; i < c1 / 2; i++) pv.push(v1);
+
+		// vector
+		var x0 = 400, y0 = 300, alpha = 0;
+		function mover() {
+			var x1 = x0 + Math.cos(alpha);
+			var y1 = y0 + Math.sin(alpha);
+			drawLine(x0, y0, x1, y1);
+			x0 = x1;
+			y0 = y1;
+			alpha += pv[pi];
+			pi = (pi + 1) % pv.length;
+		}
+
+		// interval
+		setInterval(mover, 10);
+
+		/**************/
+		/* fin engine */
+		/**************/
+
+	</script>
+
+	<script>
+		function clickDraw() {
+			c1 = document.getElementById('c1').value || c1;
+			v1 = document.getElementById('v1').value || v1;
+			c2 = document.getElementById('c2').value || c2;
+			v2 = document.getElementById('v2').value || v2;
+			var usp = new URLSearchParams();
+			usp.set('c1', c1);
+			usp.set('v1', v1);
+			usp.set('c2', c2);
+			usp.set('v2', v2);
+			window.location = location.pathname + '?' + usp.toString();
+		}
+		function clickReset() {
+			window.location = location.pathname;
+		}
+	</script>
+</body>
+
+</html>
