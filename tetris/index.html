@@ -4,25 +4,32 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Snake</title>
+	<title>Tetris</title>
 
 	<link rel="stylesheet" href="../res/bootstrap-4.1.3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	
+	<script type="text/javascript" src="../res/jquery-3.3.1.min.js"></script>
 
-	<script src="../res/jquery-3.3.1.min.js"></script>
-	<script src="script.js"></script>
+	<style>
+		#game label {
+			margin: 0;
+			background-color: lightgrey;
+			color: grey;
+		}
+	</style>
 </head>
 <body>
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 		<a class="navbar-brand" href="../index.html">JS Games</a>
 		<ul class="navbar-nav">
-			<li class="nav-item active">
+			<li class="nav-item">
 				<a class="nav-link" href="../snake/index.html">Snake</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="../tictactoe/index.html">Tictactoe</a>
 			</li>
-			<li class="nav-item">
+			<li class="nav-item active">
 				<a class="nav-link" href="../tetris/index.html">Tetris</a>
 			</li>
 			<li class="nav-item">
@@ -37,12 +44,16 @@
 		</ul>
 	</nav>
 
-	<div class="d-flex justify-content-center">
-		<div id="game">
-			<label id="gameInfo">Press start!</label>
-			<canvas id="area" width="500" height="500"></canvas>
-			<button id="iniciar" type="button" class="btn btn-secondary" onclick="iniciar()">Start</button>
+	<div id="game" class="d-flex justify-content-center mt-3">
+		<div>
+			<label id="gameInfo" class="d-block text-center">Press start!</label>
+			<canvas class="d-block mb-2"></canvas>
+			<div class="text-center">
+				<button id="iniciar" type="button" class="btn btn-secondary" onclick="iniciar()">Start</button>
+			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="./script.js"></script>
 </body>
 </html>
